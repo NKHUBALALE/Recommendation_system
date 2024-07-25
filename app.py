@@ -169,7 +169,7 @@ def main():
             """
             This application was developed by Team_JB3, a group of data science students from the ExploreAI academy as a project to build a recommendation system for anime. It demonstrates the use of various recommendation algorithms to analyze and suggest anime.
 
-            For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
+            For more information or inquiries, please contact us at JB3_unsupervised@sandtech.co.za.
 
             ---
 
