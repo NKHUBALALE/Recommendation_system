@@ -23,7 +23,6 @@ protobuf==5.27.2
 pyarrow==17.0.0
 pydeck==0.9.1
 pytz==2024.1
-pywin32==306
 referencing==0.35.1
 requests==2.32.3
 rich==13.7.1
