@@ -2,6 +2,7 @@ import pandas as pd
 import pickle
 import streamlit as st
 import os
+import requests
 
 # Custom CSS for anime style
 anime_style = """
@@ -12,11 +13,11 @@ body {
     color: #333;
 }
 h1 {
-    color: #ff6699; /* Updated color for the main title */
+    color: #ff6699;
     text-shadow: 2px 2px #ffb3d9;
 }
 h2, h3, h4 {
-    color: #ff6699; /* Updated color for subheaders */
+    color: #ff6699;
 }
 .sidebar-section {
     background-color: #28a745;
@@ -27,7 +28,7 @@ h2, h3, h4 {
     color: white;
 }
 .stButton>button {
-    background-color: #ff6699; /* Updated button color */
+    background-color: #ff6699;
     color: white;
     border: none;
     border-radius: 5px;
@@ -39,14 +40,19 @@ h2, h3, h4 {
     background-color: #ff4da6;
 }
 .stTextInput>div>div>input {
-    border: 2px solid #ff6699; /* Updated input border color */
+    border: 2px solid #ff6699;
     border-radius: 5px;
     padding: 5px;
 }
 .stTextArea>div>div>textarea {
-    border: 2px solid #ff6699; /* Updated textarea border color */
+    border: 2px solid #ff6699;
     border-radius: 5px;
     padding: 5px;
+}
+.anime-title {
+    font-size: 20px; /* Adjust font size as needed */
+    color: #ff6699; /* Same color as the heading */
+    font-weight: bold;
 }
 </style>
 """
@@ -79,7 +85,6 @@ train_cleaned = pd.read_csv(train_data_path)
 # Merge the dataframes
 merged_df = pd.merge(train_cleaned, anime_data, on='anime_id')
 
-# Streamlit app
 def get_recommendations(user_id, model, anime_data, merged_df):
     try:
         # Ensure user_id is an integer
@@ -113,6 +118,17 @@ def get_recommendations(user_id, model, anime_data, merged_df):
     except Exception as e:
         st.write("An error occurred:", e)
         return pd.DataFrame()
+
+def fetch_anime_image(anime_id):
+    url = f"https://api.jikan.moe/v4/anime/{anime_id}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        anime_data = response.json()
+        title = anime_data['data']['title']
+        image_url = anime_data['data']['images']['jpg']['image_url']
+        return title, image_url
+    else:
+        return None, None
 
 def main():
     """Recommendation System App with Streamlit"""
@@ -203,13 +219,29 @@ def main():
         if user_id:
             recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
             if not recommendations.empty:
-                st.write("Based on the information we have, we think these are the anime you would love and how you'd rate them:")
-                
-                # Display the DataFrame without index and rounded ratings
-                st.write(recommendations[['name', 'predicted_rating']].style.hide(axis='index'))
+                st.write("Based on the information we have, we think you will love these anime and rate them as follows:")
+
+                # Ensure recommendations are sorted by predicted rating in descending order
+                recommendations = recommendations.sort_values(by='predicted_rating', ascending=False)
+
+                # Display the anime titles, images, and predicted ratings in sorted order
+                for index, row in recommendations.iterrows():
+                    title, image_url = fetch_anime_image(row['anime_id'])
+                    if title and image_url:
+                        st.markdown(
+                            f"<div class='anime-title'>{title}</div> - Predicted Rating: {row['predicted_rating']}<br><img src='{image_url}' width='300'/>",
+                            unsafe_allow_html=True
+                        )
+                    else:
+                        # Use the title from the recommendations DataFrame
+                        title = row.get('title', 'Unknown Title')
+                        st.markdown(
+                            f"<div class='anime-title'>{title}</div> - Predicted Rating: {row['predicted_rating']}",
+                            unsafe_allow_html=True
+                        )
             else:
                 st.write("No recommendations available. Please check the user ID or try again later.")
-    
+
     # Building out the Feedback page
     if selection == "Feedback":
         st.info("Feedback")
@@ -230,18 +262,10 @@ def main():
 
         st.markdown(
             """
-            This application was developed by Team_JB3, a group of data science students from the ExploreAI academy as a project to build a recommendation system for anime. It demonstrates the use of various recommendation algorithms to analyze and suggest anime.
-
-            For more information or inquiries, please contact us at sharon@sandtech.co.za.
-
-            ---
-
-            **Our Mission:**
-
-            "We are here to innovate Africa and the world through data-driven insights, one anime at a time."
+            This application was developed by Team_Jupiter, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_Jupiter] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
             """
         )
 
-# Execute the main function
-if __name__ == '__main__':
+# Run the app
+if __name__ == "__main__":
     main()
