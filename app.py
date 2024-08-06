@@ -208,8 +208,6 @@ def main():
             """
         )
 
-        # Removed the image from the EDA section
-
     # Building out the Recommendation page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
@@ -269,9 +267,7 @@ def main():
 
         st.markdown(
             """
-            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data.
-
-            For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
+            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
             """
         )
 
