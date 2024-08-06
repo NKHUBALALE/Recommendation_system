@@ -1,5 +1,7 @@
-# Streamlit dependencies
+import pandas as pd
+import pickle
 import streamlit as st
+import os
 
 # Custom CSS for anime style
 anime_style = """
@@ -49,7 +51,69 @@ h2, h3, h4 {
 </style>
 """
 
-# Main function to build the Streamlit app
+# Define file paths
+model_chunk_files = ['SVD model files/model_part_0.pkl', 'SVD model files/model_part_1.pkl', 'SVD model files/model_part_2.pkl']
+anime_data_path = 'anime_cleaned.csv'
+train_data_path = 'train_cleaned.csv'
+
+def load_svd_model(chunk_files):
+    data = b''
+    for chunk_file in chunk_files:
+        if os.path.isfile(chunk_file):
+            with open(chunk_file, 'rb') as f:
+                data += f.read()
+        else:
+            st.error(f"File not found: {chunk_file}")
+            return None
+    return pickle.loads(data)
+
+# Load the SVD model
+best_svd_model = load_svd_model(model_chunk_files)
+
+# Load the anime data
+anime_data = pd.read_csv(anime_data_path)
+
+# Load the train data
+train_cleaned = pd.read_csv(train_data_path)
+
+# Merge the dataframes
+merged_df = pd.merge(train_cleaned, anime_data, on='anime_id')
+
+# Streamlit app
+def get_recommendations(user_id, model, anime_data, merged_df):
+    try:
+        # Ensure user_id is an integer
+        user_id = int(user_id)
+
+        # Get the list of all anime IDs
+        all_anime_ids = anime_data['anime_id'].unique()
+
+        # Get the list of anime IDs that the user has already rated
+        rated_anime_ids = merged_df[merged_df['user_id'] == user_id]['anime_id']
+
+        # Create test set with all anime that the user has not rated
+        testset = [(user_id, anime_id, 0) for anime_id in all_anime_ids if anime_id not in rated_anime_ids]
+
+        # Make predictions
+        predictions = model.test(testset)
+
+        # Convert predictions to a DataFrame with formatted ratings
+        pred_df = pd.DataFrame([{
+            'anime_id': pred.iid, 
+            'predicted_rating': f"{round(pred.est, 1):.1f}"  # Format to one decimal place
+        } for pred in predictions])
+
+        # Merge with anime details
+        recommendations = pd.merge(pred_df, anime_data, on='anime_id')
+        recommendations = recommendations.sort_values(by='predicted_rating', ascending=False)
+
+        # Return top 10 recommendations
+        return recommendations.head(10)
+    
+    except Exception as e:
+        st.write("An error occurred:", e)
+        return pd.DataFrame()
+
 def main():
     """Recommendation System App with Streamlit"""
 
@@ -128,25 +192,24 @@ def main():
             """
         )
 
-        # Placeholder for future visualizations (e.g., genre distribution, rating distributions)
-        st.markdown("Visualizations will be added here.")
+        # Removed the image from the EDA section
 
     # Building out the Recommendation page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
 
-        # Placeholder for user input and recommendations
-        st.markdown(
-            """
-            This section will allow users to input their favorite anime and get personalized recommendations.
-            """
-        )
+        user_id = st.text_input("Enter User ID", '')
 
-        # Example: Simple text input for favorite anime
-        favorite_anime = st.text_input("Enter your favorite anime:", "")
-        if st.button("Get Recommendations"):
-            st.markdown(f"Recommendations based on {favorite_anime} will be displayed here.")
-
+        if user_id:
+            recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
+            if not recommendations.empty:
+                st.write("Based on the information we have, we think these are the anime you would love and how you'd rate them:")
+                
+                # Display the DataFrame without index and rounded ratings
+                st.write(recommendations[['name', 'predicted_rating']].style.hide(axis='index'))
+            else:
+                st.write("No recommendations available. Please check the user ID or try again later.")
+    
     # Building out the Feedback page
     if selection == "Feedback":
         st.info("Feedback")
@@ -169,7 +232,7 @@ def main():
             """
             This application was developed by Team_JB3, a group of data science students from the ExploreAI academy as a project to build a recommendation system for anime. It demonstrates the use of various recommendation algorithms to analyze and suggest anime.
 
-            For more information or inquiries, please contact us at JB3_unsupervised@sandtech.co.za.
+            For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
 
             ---
 
