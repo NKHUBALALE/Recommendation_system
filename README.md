@@ -46,17 +46,16 @@ To set up the project, follow these steps:
 
   ```bash
   venv\Scripts\activate
-
+  ```
 5. Install Required Packages
 
   Use the requirements.txt file to install the necessary packages.
 
   ```bash
-  Copy code
   pip install -r requirements.txt
-
+  ```
 6 Run the Application
 
   ```bash
-  Copy code
   streamlit run app.py
+  ```
