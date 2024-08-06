@@ -10,7 +10,7 @@ cmake==3.30.2
 colorama==0.4.6
 comm==0.2.2
 Cython==3.0.10
-debugpy==1.8.3
+debugpy==1.8.5
 decorator==5.1.1
 exceptiongroup==1.2.2
 executing==2.0.1
