@@ -210,7 +210,7 @@ def main():
 
         # Removed the image from the EDA section
 
-    # Building out the Recommendation page
+   # Building out the Recommendation page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
 
@@ -226,17 +226,25 @@ def main():
 
                 # Display the anime titles, images, and predicted ratings in sorted order
                 for index, row in recommendations.iterrows():
-                    title, image_url = fetch_anime_image(row['anime_id'])
-                    if title and image_url:
+                    anime_id = row['anime_id']
+                
+                    # Fetch the anime image and title from the API
+                    title, image_url = fetch_anime_image(anime_id)
+                
+                    if not title or not image_url:
+                        # Use the title from the recommendations DataFrame if API fails
+                        title = row.get('title', 'Unknown Title')
+                        image_url = None
+                
+                    # Display the image and title
+                    if image_url:
                         st.markdown(
-                            f"<div class='anime-title'>{title}</div> - Predicted Rating: {row['predicted_rating']}<br><img src='{image_url}' width='300'/>",
+                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}<br><img src='{image_url}' width='300'/>",
                             unsafe_allow_html=True
                         )
                     else:
-                        # Use the title from the recommendations DataFrame
-                        title = row.get('title', 'Unknown Title')
                         st.markdown(
-                            f"<div class='anime-title'>{title}</div> - Predicted Rating: {row['predicted_rating']}",
+                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}",
                             unsafe_allow_html=True
                         )
             else:
