@@ -210,7 +210,7 @@ def main():
 
         # Removed the image from the EDA section
 
-   # Building out the Recommendation page
+    # Building out the Recommendation page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
 
@@ -219,24 +219,23 @@ def main():
         if user_id:
             recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
             if not recommendations.empty:
-                st.write("Based on the information we have, we think you will love these anime and rate them as follows:")
+                st.write("Based on the information we have, we think these are the anime you would love and how you'd rate them:")
 
-                # Ensure recommendations are sorted by predicted rating in descending order
-                recommendations = recommendations.sort_values(by='predicted_rating', ascending=False)
-
-                # Display the anime titles, images, and predicted ratings in sorted order
+                # Display the DataFrame without index and rounded ratings
+                recommendations = recommendations[['anime_id', 'predicted_rating']]
+                
                 for index, row in recommendations.iterrows():
                     anime_id = row['anime_id']
-                
+                    
                     # Fetch the anime image and title from the API
                     title, image_url = fetch_anime_image(anime_id)
-                
+                    
                     if not title or not image_url:
-                        # Use the title from the recommendations DataFrame if API fails
-                        title = row.get('title', 'Unknown Title')
+                        # Use the title from the local dataset if API fails
+                        title = anime_data.loc[anime_data['anime_id'] == anime_id, 'name'].values[0]
                         image_url = None
-                
-                    # Display the image and title
+                    
+                    # Display the anime information
                     if image_url:
                         st.markdown(
                             f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}<br><img src='{image_url}' width='300'/>",
@@ -270,10 +269,11 @@ def main():
 
         st.markdown(
             """
-            This application was developed by Team_Jupiter, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_Jupiter] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
+            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data.
+
+            For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
             """
         )
 
-# Run the app
 if __name__ == "__main__":
     main()
