@@ -3,8 +3,8 @@ import pickle
 import streamlit as st
 import os
 import requests
-
 import base64
+
 
 # Function to set background image
 def set_background_image(image_path, brightness=0.6):
@@ -227,7 +227,6 @@ def main():
         )
 
     # Building out the "EDA" page
-    # Building out the "EDA" page
     if selection == "EDA":
         st.info("Exploratory Data Analysis")
 
@@ -268,7 +267,6 @@ def main():
         )
         st.image('most watched anime.png', caption='Data Balance Visualization', use_column_width=True)
 
-
     # Building out the Recommendation page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
@@ -276,7 +274,19 @@ def main():
         user_id = st.text_input("Enter User ID", '')
 
         if user_id:
-            recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
+            # Add a radio button to select the recommendation method
+            recommendation_method = st.radio(
+                "Choose Recommendation Method",
+                ("Collaborative Filtering", "Content-Based Filtering")
+            )
+
+            if recommendation_method == "Collaborative Filtering":
+                recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
+            else:
+                # Placeholder for content-based filtering logic
+                st.write("Content-Based Filtering is not yet implemented.")
+                recommendations = pd.DataFrame()  # Replace this with actual content-based filtering code
+
             if not recommendations.empty:
                 st.write("Based on the information we have, we think these are the anime you would love and how you'd rate them:")
 
