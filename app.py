@@ -4,6 +4,37 @@ import streamlit as st
 import os
 import requests
 
+import base64
+
+# Function to set background image
+def set_background_image(image_path, brightness=0.6):
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url(data:image/png;base64,{encoded_image});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: brightness({brightness});
+        }}
+        .stApp > div {{
+            background-color: rgba(0, 0, 0, 0.6);  /* Darken the background for better text visibility */
+            padding: 10px;
+            border-radius: 10px;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Apply the background image
+set_background_image('image.png', brightness=0.6)  # Update the path to your image
+
+
+
 # Custom CSS for anime style
 anime_style = """
 <style>
@@ -236,17 +267,15 @@ def main():
                     # Display the anime information
                     if image_url:
                         st.markdown(
-                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}<br><img src='{image_url}' width='300'/>",
-                            unsafe_allow_html=True
-                        )
-                    else:
-                        st.markdown(
                             f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}",
                             unsafe_allow_html=True
                         )
-            else:
-                st.write("No recommendations available. Please check the user ID or try again later.")
-
+                        st.image(image_url, caption=title, use_column_width=True)  # Use column width scaling
+                    else:
+                        st.markdown(
+                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}",
+                           unsafe_allow_html=True
+                            )
     # Building out the Feedback page
     if selection == "Feedback":
         st.info("Feedback")
