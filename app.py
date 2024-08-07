@@ -227,6 +227,7 @@ def main():
         )
 
     # Building out the "EDA" page
+    # Building out the "EDA" page
     if selection == "EDA":
         st.info("Exploratory Data Analysis")
 
@@ -238,6 +239,35 @@ def main():
             - Understanding the data helps in identifying patterns and potential biases, which are critical for developing accurate recommendation models.
             """
         )
+
+        st.markdown(
+            """
+            ### Distribution of Anime Genres
+
+            The following visualization provides insights into the distribution of anime across various genres. This helps in understanding genre popularity and diversity.
+            """
+        )
+        # Display the 'anime by genre' image
+        st.image('anime by genre.png', caption='Distribution of Anime by Genre', use_column_width=True)
+
+        st.markdown(
+            """
+            ### Balance of anime type
+
+            This visualization illustrates the data balance before and after resampling techniques were applied. It is important to visualize data imbalance as it can significantly impact the performance of machine learning models.
+            """
+        )
+        # Display the 'image copy' image
+        st.image('image copy.png', caption='Data Balance Visualization', use_column_width=True)
+
+        st.markdown(
+            """
+            ### distribution of how the genre watched
+            """
+
+        )
+        st.image('most watched anime.png', caption='Data Balance Visualization', use_column_width=True)
+
 
     # Building out the Recommendation page
     if selection == "Recommendation":
@@ -284,11 +314,23 @@ def main():
             """
             We value your feedback! Please provide your comments and suggestions to help us improve this application.
             """
-        )
+        )     
 
+        # Feedback text area
         feedback_text = st.text_area("Your Feedback", "")
+
+        # Optional email input
+        email = st.text_input("Optional: Your Email Address", "")
+
         if st.button("Submit Feedback"):
-            st.success("Thank you for your feedback!")
+            if feedback_text:
+                if email:
+                    st.success(f"Thank you for your feedback! We will contact you at {email} if needed.")
+                else:
+                    st.success("Thank you for your feedback!")
+                # Here you would typically handle feedback submission, e.g., saving it to a file or database
+            else:
+                st.warning("Please provide some feedback before submitting.")
 
     # Building out the About Us page
     if selection == "About Us":
@@ -296,7 +338,7 @@ def main():
 
         st.markdown(
             """
-            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
+            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at JB3unsupervised@sandtech.co.za.
             """
         )
 
