@@ -340,7 +340,7 @@ def main():
             """
             This application was developed by Team JB3, a group of data science enthusiasts from the ExploreAI academy, as part of an unsupervised learning project. Our goal is to provide personalized anime recommendations based on user preferences and behaviors. By leveraging advanced recommendation algorithms and exploratory data analysis, we aim to enhance your anime discovery experience.
 
-This system uses collaborative filtering and content-based techniques to suggest anime that you might enjoy, helping you find new favorites based on your interests. For more information or inquiries, please contact us at your_email@sandtech.co.za.
+This system uses collaborative filtering and content-based techniques to suggest anime that you might enjoy, helping you find new favorites based on your interests. For more information or inquiries, please contact us at jb3unsupervised@sandtech.co.za.
             """
         )
 
