@@ -307,13 +307,13 @@ def main():
                     # Display the anime information
                     if image_url:
                         st.markdown(
-                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}",
+                            f"<div class='anime-title'>{title}</div> - You are likely to give a rating of: {row['predicted_rating']}",
                             unsafe_allow_html=True
                         )
                         st.image(image_url, caption=title, use_column_width=True)  # Use column width scaling
                     else:
                         st.markdown(
-                            f"<div class='anime-title'>{title}</div> - You are likely to rate: {row['predicted_rating']}",
+                            f"<div class='anime-title'>{title}</div> - You are likely to give a rating of: {row['predicted_rating']}",
                            unsafe_allow_html=True
                             )
     # Building out the Feedback page
