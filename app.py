@@ -329,16 +329,13 @@ def main():
 
         st.markdown(
             """
-            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
-            """
-        )
-        
-        st.markdown(
-            """
-            Team Members:
-            - Member 1
-            - Member 2
-            - Member 3
+            This application was developed by Team JB3, a group of data science enthusiasts from the ExploreAI academy, as part of an unsupervised learning project. Our goal is to provide personalized anime recommendations based on user preferences and behaviors. By leveraging advanced recommendation algorithms and exploratory data analysis, we aim to enhance your anime discovery experience.
+
+This system uses collaborative filtering and content-based techniques to suggest anime that you might enjoy, helping you find new favorites based on your interests.
+
+We are always open to new project collaborations and would love to explore innovative ideas and partnerships, the world is in safe hands with us. For more information or inquiries, please contact us at JB3unsupervised@sandtech.co.za.
+
+Thank you for your interest and support!
             """
         )
 
