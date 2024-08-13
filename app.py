@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from scripts_for_pages import home, information, eda, feedback, about_us
 from scripts_for_pages.recommendations import get_recommendations, fetch_anime_image, best_svd_model, anime_data, merged_df
 from styles.styles import set_background_image, apply_custom_styles
