@@ -5,7 +5,6 @@ import os
 import requests
 import base64
 
-
 # Function to set background image
 def set_background_image(image_path, brightness=0.6):
     with open(image_path, "rb") as image_file:
@@ -31,9 +30,7 @@ def set_background_image(image_path, brightness=0.6):
     )
 
 # Apply the background image
-set_background_image('image.png', brightness=0.6)  # Update the path to your image
-
-
+set_background_image('images/image.png', brightness=0.6)  # Update the path to your image
 
 # Custom CSS for anime style
 anime_style = """
@@ -90,8 +87,8 @@ h2, h3, h4 {
 
 # Define file paths
 model_chunk_files = ['SVD model files/model_part_0.pkl', 'SVD model files/model_part_1.pkl', 'SVD model files/model_part_2.pkl']
-anime_data_path = 'anime_cleaned.csv'
-train_data_path = 'train_cleaned.csv'
+anime_data_path = 'csv files/anime_cleaned.csv'
+train_data_path = 'csv files/train_cleaned.csv'
 
 def load_svd_model(chunk_files):
     data = b''
@@ -247,7 +244,7 @@ def main():
             """
         )
         # Display the 'anime by genre' image
-        st.image('anime by genre.png', caption='Distribution of Anime by Genre', use_column_width=True)
+        st.image('images/anime by genre.png', caption='Distribution of Anime by Genre', use_column_width=True)
 
         st.markdown(
             """
@@ -257,17 +254,17 @@ def main():
             """
         )
         # Display the 'image copy' image
-        st.image('image copy.png', caption='Data Balance Visualization', use_column_width=True)
+        st.image('images/image copy.png', caption='Data Balance Visualization', use_column_width=True)
 
         st.markdown(
             """
-            ### distribution of how the genre watched
+            ### Distribution of how the genre watched
             """
-
         )
-        st.image('most watched anime.png', caption='Data Balance Visualization', use_column_width=True)
+        # Display the 'most watched anime' image
+        st.image('images/most watched anime.png', caption='Data Balance Visualization', use_column_width=True)
 
-    # Building out the Recommendation page
+    # Building out the "Recommendation" page
     if selection == "Recommendation":
         st.info("Anime Recommendations")
 
@@ -314,49 +311,37 @@ def main():
                     else:
                         st.markdown(
                             f"<div class='anime-title'>{title}</div> - You are likely to give a rating of {row['predicted_rating']}",
-                           unsafe_allow_html=True
-                            )
-    # Building out the Feedback page
+                            unsafe_allow_html=True
+                        )
+
+    # Building out the "Feedback" page
     if selection == "Feedback":
-        st.info("Feedback")
+        st.info("Feedback Form")
 
-        st.markdown(
-            """
-            We value your feedback! Please provide your comments and suggestions to help us improve this application.
-            """
-        )     
-
-        # Feedback text area
-        feedback_text = st.text_area("Your Feedback", "")
-
-        # Optional email input
-        email = st.text_input("Optional: Your Email Address", "")
-
+        feedback = st.text_area("Provide your feedback or suggestions here:")
         if st.button("Submit Feedback"):
-            if feedback_text:
-                if email:
-                    st.success(f"Thank you for your feedback! We will contact you at {email} if needed.")
-                else:
-                    st.success("Thank you for your feedback!")
-                # Here you would typically handle feedback submission, e.g., saving it to a file or database
-            else:
-                st.warning("Please provide some feedback before submitting.")
+            # Here, you would add code to save or process the feedback
+            st.write("Thank you for your feedback!")
 
-    # Building out the About Us page
+    # Building out the "About Us" page
     if selection == "About Us":
         st.info("About Us")
 
         st.markdown(
             """
-            This application was developed by Team JB3, a group of data science enthusiasts from the ExploreAI academy, as part of an unsupervised learning project. Our goal is to provide personalized anime recommendations based on user preferences and behaviors. By leveraging advanced recommendation algorithms and exploratory data analysis, we aim to enhance your anime discovery experience.
-
-This system uses collaborative filtering and content-based techniques to suggest anime that you might enjoy, helping you find new favorites based on your interests.
-
-We are always open to new project collaborations and would love to explore innovative ideas and partnerships, the world is in safe hands with us. For more information or inquiries, please contact us at JB3unsupervised@sandtech.co.za.
-
-Thank you for your interest and support!
+            This application was developed by Team_MM1, a group of data science students from the ExploreAI academy under the supervised classification sprint [Team_MM1] as a project to classify news articles into categories using machine learning models. It demonstrates the use of various classification algorithms to analyze and categorize text data. For more information or inquiries, please contact us at mm1_classification@sandtech.co.za.
+            """
+        )
+        
+        st.markdown(
+            """
+            Team Members:
+            - Member 1
+            - Member 2
+            - Member 3
             """
         )
 
+# Run the application
 if __name__ == "__main__":
     main()
