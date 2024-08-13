@@ -1,6 +1,7 @@
+# styles/styles.py
+
 import streamlit as st
 import base64
-from pages import home
 
 def set_background_image(image_path, brightness=0.6):
     """Function to set background image"""
@@ -80,21 +81,3 @@ def apply_custom_styles():
     </style>
     """
     st.markdown(anime_style, unsafe_allow_html=True)
-
-def main():
-    """Main function for the Streamlit app"""
-    
-    # Apply background image and custom styles
-    set_background_image('images/image.png', brightness=0.6)  # Update the path to your image
-    apply_custom_styles()
-
-    # Sidebar navigation
-    options = ["Home"]
-    selection = st.sidebar.selectbox("Choose Option", options)
-    
-    # Page routing
-    if selection == "Home":
-        home.display()
-
-if __name__ == "__main__":
-    main()
