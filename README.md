@@ -38,21 +38,21 @@ To set up the project, follow these steps:
 
 3. **Create a Virtual Environment**
 
-  It is recommended to use Python 3.10 to avoid potential library conflicts (e.g., with Scikit-Surprise).
+    It is recommended to use Python 3.10 to avoid potential library conflicts (e.g., with Scikit-Surprise).
 
 4 Activate the Virtual Environment
 
-  On Windows:
+    On Windows:
 
   ```bash
   venv\Scripts\activate
   ```
 5. Install Required Packages
 
-  Use the requirements.txt file to install the necessary packages.
+    Use the requirements.txt file to install the necessary packages.
 
   ```bash
-  pip install -r requirements.txt
+    pip install -r requirements.txt
   ```
 6 Run the Application
 
