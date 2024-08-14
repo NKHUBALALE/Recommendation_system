@@ -31,7 +31,7 @@ def main():
         
         # Choose Recommendation Method
         recommendation_method = st.radio(
-            "Choose Recommendation Method",
+            "Choose Recommendation Method((first time user with no history choose content based))",
             ("Collaborative Filtering", "Content-Based Filtering")
         )
 
@@ -64,7 +64,7 @@ def main():
                     st.error(f"An error occurred: {e}")
         
         elif recommendation_method == "Content-Based Filtering":
-            user_animes = st.text_input("Enter up to 3 Anime Titles (comma separated)", '').split(',')
+            user_animes = st.text_input("Enter up to 3 Anime Titles (comma separated) and ensure each word starts with a capital letter, for example you can entere: Kuroko no Basket,Naruto,High School DxD", '').split(',')
             user_animes = [anime.strip() for anime in user_animes if anime.strip()]
             if user_animes:
                 try:

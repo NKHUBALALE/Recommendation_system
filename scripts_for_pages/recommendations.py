@@ -9,8 +9,8 @@ import streamlit as st
 model_chunk_files = ['SVD model files/model_part_0.pkl', 'SVD model files/model_part_1.pkl', 'SVD model files/model_part_2.pkl']
 anime_data_path = 'csv files/anime_cleaned.csv'
 train_data_path = 'csv files/train_cleaned.csv'
-tfidf_matrix_path = 'tfidf_matrix.pkl'
-feature_names_path = 'feature_names.pkl'
+tfidf_matrix_path = 'precomputed_vectors/tfidf_matrix.pkl'
+feature_names_path = 'precomputed_vectors/feature_names.pkl'
 
 # Function to load the SVD model
 def load_svd_model(chunk_files):
@@ -118,7 +118,7 @@ def get_content_based_recommendations(user_animes, anime_data, tfidf_matrix, fea
         
         recommended_animes = pd.DataFrame(top_scores, columns=['anime_id', 'score'])
         recommendations = pd.merge(recommended_animes, anime_data, on='anime_id')
-        recommendations = recommendations.sort_values(by='score', ascending=False)
+        recommendations = recommendations.sort_values(by ='score', ascending=False)
         return recommendations.head(10)
     
     except Exception as e:
@@ -137,13 +137,22 @@ if recommendation_method == "Collaborative Filtering":
     user_id = st.text_input("Enter User ID")
     if st.button("Get Recommendations"):
         try:
-            recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
-            st.write("Recommendations:")
-            for _, row in recommendations.iterrows():
-                title, image_url = fetch_anime_image(row['anime_id'])
-                if image_url:
-                    st.image(image_url, caption=title)
-                st.write(f"{row['name']}: {row['predicted_rating']}")
+            # Validate if user_id is an integer
+            user_id = int(user_id)
+            
+            # Check if user_id exists in the dataset
+            if user_id not in merged_df['user_id'].unique():
+                st.error("User ID not found in the dataset. Please enter a valid User ID.")
+            else:
+                recommendations = get_recommendations(user_id, best_svd_model, anime_data, merged_df)
+                st.write("Recommendations:")
+                for _, row in recommendations.iterrows():
+                    title, image_url = fetch_anime_image(row['anime_id'])
+                    if image_url:
+                        st.image(image_url, caption=title)
+                    st.write(f"{row['name']}: {row['predicted_rating']}")
+        except ValueError:
+            st.error("Please enter a valid integer User ID.")
         except Exception as e:
             st.error(f"An error occurred: {e}")
 
@@ -161,3 +170,24 @@ elif recommendation_method == "Content-Based Filtering":
                 st.write(f"{row['name']}: {row['rating']}")
         except Exception as e:
             st.error(f"An error occurred: {e}")
+
+# Tips for users
+st.markdown(
+    """
+    ### Tips for Getting the Best Recommendations:
+
+    - **Collaborative Filtering:**
+        - Enter a valid User ID that exists in the dataset.
+        - Ensure that the User ID is an integer and is correctly entered.
+    
+    - **Content-Based Filtering:**
+        - Provide up to 3 anime titles (comma-separated) that you have watched and enjoyed.
+        - Enter the anime titles exactly as they appear in our dataset. For example, use "Dragon Ball Z" instead of "DRAGON BALL Z".
+        - For anime with multiple names or subtitles, include the full title, such as "Naruto Shippuden" instead of just "Naruto".
+
+    - **General Tips:**
+        - The more specific and accurate your input, the better the recommendations will be.
+        - If you encounter any issues or errors, make sure to check the format and spelling of your input.
+        - Feel free to explore different recommendation methods to find the one that suits you best.
+    """
+)
